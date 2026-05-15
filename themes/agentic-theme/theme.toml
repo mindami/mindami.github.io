@@ -1,0 +1,7 @@
+name        = "Agentic Theme"
+license     = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "A minimalist Blade Runner-inspired dark theme for the Agentic site."
+homepage    = "https://github.com/mindami/site"
+tags        = ["blog", "dark", "minimal"]
+features    = ["blog", "news", "videos"]

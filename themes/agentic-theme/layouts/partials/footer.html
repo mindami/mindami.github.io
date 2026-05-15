@@ -1,0 +1,24 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Agentic<span>.</span></div>
+        <p class="footer-copy">&copy; {{ now.Year }} {{ .Site.Title }}. Built with Hugo.</p>
+      </div>
+
+      <ul class="footer-links">
+        {{ range .Site.Menus.main }}
+        <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+        {{ end }}
+      </ul>
+
+      {{ with .Site.Params.social }}
+      <ul class="footer-links">
+        {{ with .twitter  }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">Twitter</a></li>{{ end }}
+        {{ with .github   }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">GitHub</a></li>{{ end }}
+        {{ with .linkedin }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">LinkedIn</a></li>{{ end }}
+      </ul>
+      {{ end }}
+    </div>
+  </div>
+</footer>

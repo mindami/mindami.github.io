@@ -1,0 +1,63 @@
+{{ define "main" }}
+
+<!-- ── Post Hero ─────────────────────────────────────── -->
+<div class="post-hero">
+  <div class="container">
+    <div class="post-hero-meta">
+      {{ with .Params.categories }}
+        {{ range first 1 . }}<span class="tag">{{ . }}</span>{{ end }}
+      {{ end }}
+      {{ with .Params.tags }}
+        {{ range first 2 . }}<span class="tag" style="background:rgba(255,255,255,0.07);color:var(--text-sec);">{{ . }}</span>{{ end }}
+      {{ end }}
+      <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+        {{ .Date.Format "January 2, 2006" }}
+      </time>
+    </div>
+    <h1 class="post-title">{{ .Title }}</h1>
+    {{ with .Description }}<p class="post-desc">{{ . }}</p>{{ end }}
+    {{ if .Params.author }}
+    <div style="margin-top:1.25rem;color:var(--text-muted);font-size:0.875rem;">
+      By <strong style="color:var(--text-sec);">{{ .Params.author }}</strong>
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+<!-- ── Post Content ──────────────────────────────────── -->
+{{ if eq .Section "videos" }}
+<div class="container">
+  {{ $id := .Params.videoId }}
+  {{ $platform := .Params.videoPlatform | default "youtube" }}
+  <div class="video-embed-wrap" style="margin-top:2.5rem;">
+    {{ if eq $platform "youtube" }}
+    <iframe src="https://www.youtube.com/embed/{{ $id }}"
+            title="{{ .Title }}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"></iframe>
+    {{ else if eq $platform "vimeo" }}
+    <iframe src="https://player.vimeo.com/video/{{ $id }}"
+            title="{{ .Title }}"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            loading="lazy"></iframe>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
+
+<div class="container">
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+</div>
+
+<!-- ── Back Link ─────────────────────────────────────── -->
+<div class="container" style="padding-bottom:3rem;">
+  <a href="{{ .Section | relURL }}" class="btn btn-ghost">
+    ← Back to {{ .Section | title }}
+  </a>
+</div>
+
+{{ end }}
