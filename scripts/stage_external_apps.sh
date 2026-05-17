@@ -95,11 +95,11 @@ resolve_clone_url() {
     local repo_path="${repo#git@github.com:}"
     repo_path="${repo_path%.git}"
     if [[ "$auth" == "pat" ]]; then
-      if [[ -z "${EXTERNAL_REPO_PAT:-}" ]]; then
-        echo "EXTERNAL_REPO_PAT is required for private repo '$repo'" >&2
+      if [[ -z "${ZIEJAZZ_REPO_PAT:-}" ]]; then
+        echo "ZIEJAZZ_REPO_PAT is required for private repo '$repo'" >&2
         return 1
       fi
-      echo "https://x-access-token:${EXTERNAL_REPO_PAT}@github.com/${repo_path}.git"
+      echo "https://x-access-token:${ZIEJAZZ_REPO_PAT}@github.com/${repo_path}.git"
       return 0
     fi
     echo "$repo"
@@ -110,11 +110,11 @@ resolve_clone_url() {
     local without_scheme="${repo#https://github.com/}"
     without_scheme="${without_scheme%.git}"
     if [[ "$auth" == "pat" ]]; then
-      if [[ -z "${EXTERNAL_REPO_PAT:-}" ]]; then
-        echo "EXTERNAL_REPO_PAT is required for private repo '$repo'" >&2
+      if [[ -z "${ZIEJAZZ_REPO_PAT:-}" ]]; then
+        echo "ZIEJAZZ_REPO_PAT is required for private repo '$repo'" >&2
         return 1
       fi
-      echo "https://x-access-token:${EXTERNAL_REPO_PAT}@github.com/${without_scheme}.git"
+      echo "https://x-access-token:${ZIEJAZZ_REPO_PAT}@github.com/${without_scheme}.git"
       return 0
     fi
     echo "https://github.com/${without_scheme}.git"
@@ -123,11 +123,11 @@ resolve_clone_url() {
 
   if [[ "$repo" == */* && "$repo" != *"://"* ]]; then
     if [[ "$auth" == "pat" ]]; then
-      if [[ -z "${EXTERNAL_REPO_PAT:-}" ]]; then
-        echo "EXTERNAL_REPO_PAT is required for private repo '$repo'" >&2
+      if [[ -z "${ZIEJAZZ_REPO_PAT:-}" ]]; then
+        echo "ZIEJAZZ_REPO_PAT is required for private repo '$repo'" >&2
         return 1
       fi
-      echo "https://x-access-token:${EXTERNAL_REPO_PAT}@github.com/${repo}.git"
+      echo "https://x-access-token:${ZIEJAZZ_REPO_PAT}@github.com/${repo}.git"
       return 0
     fi
     echo "https://github.com/${repo}.git"
