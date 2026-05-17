@@ -24,7 +24,7 @@ Hugo site for https://www.mindami.com/.
 7. Post-deploy smoke checks pass:
    - `https://www.mindami.com/`
    - `https://www.mindami.com/blog/`
-   - `https://www.mindami.com/apps/ziejazz/`
+   - `https://www.mindami.com/birdsy/`
 
 ## External JS/TS App Deployments
 
@@ -32,7 +32,7 @@ This site can build JS/TS apps from other GitHub repositories and publish their
 build artifacts under this site's static paths.
 
 Current seeded app:
-- `alee/ziejazz` published at `/apps/ziejazz/`
+- `alee/ziejazz` published at `/birdsy/`
 
 ### How It Works
 
@@ -61,7 +61,7 @@ Pipe-delimited fields:
 Example:
 
 ```text
-ziejazz|alee/ziejazz|main|npm ci|npm run build|dist|apps/ziejazz|pat
+ziejazz|alee/ziejazz|main|npm ci|make build VITE_BASE=/birdsy|dist|birdsy|pat
 ```
 
 ### Secrets For Private Repos
@@ -96,7 +96,7 @@ toolchain.
    verify `static/CNAME` is `www.mindami.com` and DNS CNAME points to GitHub Pages host.
 - Site root loads but nested routes return 404:
    ensure Hugo `baseURL` and `.env` `SITE_URL` are aligned to `https://www.mindami.com/`.
-- `/apps/ziejazz/` returns 404:
-   confirm external app staging step ran and output was copied into `static/apps/ziejazz/` before Hugo build.
+- `/birdsy/` returns 404:
+   confirm external app staging step ran and output was copied into `static/birdsy/` before Hugo build.
 - Manual dispatch builds from non-main branch and should not publish:
    expected behavior; deploy job runs only for `main`.

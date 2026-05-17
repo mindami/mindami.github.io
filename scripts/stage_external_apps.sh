@@ -158,42 +158,38 @@ run_build_commands() {
   )
 }
 
-inject_systemjs_runtime_if_needed() {
-  local app_dir="$1"
-  local entry_html="${app_dir}/index.html"
-  local systemjs_cdn="https://cdn.jsdelivr.net/npm/systemjs@6/dist/system.min.js"
+validate_no_forbidden_asset_refs() {
+  local target_dir="$1"
+  shift
 
-  if [[ ! -f "$entry_html" ]]; then
-    return
-  fi
-
-  if ! grep -R -q "System\.register" --include='*.js' "$app_dir"; then
-    return
-  fi
-
-  if grep -q "system\.min\.js\|systemjs" "$entry_html"; then
-    return
-  fi
-
-  echo "[external-apps] Compatibility: injecting SystemJS runtime into ${entry_html}"
-
-  awk -v runtime="<script src=\"${systemjs_cdn}\"></script>" '
-    BEGIN { inserted = 0 }
-    {
-      if (!inserted && $0 ~ /<script[^>]*src=/) {
-        print runtime
-        inserted = 1
-      }
-      print
-    }
-    END {
-      if (!inserted) {
-        print runtime
-      }
-    }
-  ' "$entry_html" > "${entry_html}.tmp"
-
-  mv "${entry_html}.tmp" "$entry_html"
+  local pattern
+  for pattern in "$@"; do
+    if grep -RInF \
+      --binary-files=without-match \
+      --exclude-dir=.git \
+      --exclude='*.png' \
+      --exclude='*.jpg' \
+      --exclude='*.jpeg' \
+      --exclude='*.gif' \
+      --exclude='*.webp' \
+      --exclude='*.svg' \
+      --exclude='*.ico' \
+      "$pattern" "$target_dir" >/dev/null; then
+      echo "[external-apps] Validation failed: found forbidden asset reference '$pattern' in staged output ${target_dir}" >&2
+      grep -RInF \
+        --binary-files=without-match \
+        --exclude-dir=.git \
+        --exclude='*.png' \
+        --exclude='*.jpg' \
+        --exclude='*.jpeg' \
+        --exclude='*.gif' \
+        --exclude='*.webp' \
+        --exclude='*.svg' \
+        --exclude='*.ico' \
+        "$pattern" "$target_dir" | head -n 10 >&2
+      return 1
+    fi
+  done
 }
 
 line_number=0
@@ -243,7 +239,9 @@ while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
   mkdir -p "$target_dir"
   cp -a "${source_dir}/." "$target_dir/"
 
-  inject_systemjs_runtime_if_needed "$target_dir"
+  if [[ "$slug" == "ziejazz" ]]; then
+    validate_no_forbidden_asset_refs "$target_dir" "/apps/ziejazz/" "./PressStart2P.woff2"
+  fi
 
   echo "[external-apps] Done: ${slug} => ${target_dir}"
 done < "$CONFIG_FILE"
