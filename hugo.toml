@@ -1,7 +1,7 @@
-baseURL = 'https://mindami.github.io/site/'
-languageCode = 'en-us'
-title = 'Agentic'
-theme = 'agentic-theme'
+baseURL = 'https://www.mindami.com/'
+locale = 'en-US'
+title = 'Mindami'
+theme = 'mindami'
 
 [taxonomies]
   category = 'categories'
@@ -11,9 +11,9 @@ theme = 'agentic-theme'
   tagline = 'Being human in the agentic age'
   description = 'Exploring AI agents, autonomous systems, and the future of human-centered computing.'
   [params.social]
-    twitter  = 'https://twitter.com/'
+    bluesky  = 'https://bsky.app/profile/mindami.com'
     github   = 'https://github.com/mindami'
-    linkedin = 'https://linkedin.com/'
+    linkedin = 'https://linkedin.com/mindami'
 
 [[menus.main]]
   name       = 'Blog'
@@ -34,3 +34,7 @@ theme = 'agentic-theme'
   name       = 'About'
   url        = '/about/'
   weight     = 4
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'

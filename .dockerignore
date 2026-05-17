@@ -1,0 +1,15 @@
+# Keep build context small and deterministic.
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Generated artifacts and caches.
+public
+resources/_gen
+.hugo_cache
+.hugo_build.lock
+
+# Local dependency trees.
+node_modules

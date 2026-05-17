@@ -2,6 +2,8 @@
 public/
 resources/_gen/
 .hugo_build.lock
+.hugo_cache/
+.external-apps-work/
 
 # OS
 .DS_Store
@@ -11,3 +13,4 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+*~

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="footer-inner">
       <div>
-        <div class="footer-brand">Agentic<span>.</span></div>
+        <div class="footer-brand">MindAm<span>I</span></div>
         <p class="footer-copy">&copy; {{ now.Year }} {{ .Site.Title }}. Built with Hugo.</p>
       </div>
 
@@ -14,7 +14,7 @@
 
       {{ with .Site.Params.social }}
       <ul class="footer-links">
-        {{ with .twitter  }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">Twitter</a></li>{{ end }}
+        {{ with .bluesky }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">Bluesky</a></li>{{ end }}
         {{ with .github   }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">GitHub</a></li>{{ end }}
         {{ with .linkedin }}<li><a href="{{ . }}" rel="noopener noreferrer" target="_blank">LinkedIn</a></li>{{ end }}
       </ul>
