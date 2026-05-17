@@ -1,0 +1,54 @@
+services:
+  hugo-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      pull: true
+      args:
+        HUGO_VERSION: ${HUGO_VERSION:-v0.161.1}
+    image: mindami-site-hugo:local
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /src
+    environment:
+      HUGO_CACHEDIR: /cache
+      SITE_URL: ${SITE_URL:-https://www.mindami.com/}
+    volumes:
+      - ./:/src
+      - ./.hugo_cache:/cache
+    command:
+      - --cacheDir
+      - /cache
+      - --gc
+      - --minify
+      - --baseURL
+      - ${SITE_URL:-https://www.mindami.com/}
+
+  hugo-serve:
+    image: mindami-site-hugo:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+      pull: true
+      args:
+        HUGO_VERSION: ${HUGO_VERSION:-v0.161.1}
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /src
+    environment:
+      HUGO_CACHEDIR: /cache
+      PORT: ${PORT:-1313}
+    volumes:
+      - ./:/src
+      - ./.hugo_cache:/cache
+    ports:
+      - "${PORT:-1313}:${PORT:-1313}"
+    command:
+      - server
+      - --cacheDir
+      - /cache
+      - --bind
+      - 0.0.0.0
+      - --baseURL
+      - http://localhost:${PORT:-1313}/
+      - --appendPort=false
+      - --port
+      - ${PORT:-1313}

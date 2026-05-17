@@ -1,0 +1,122 @@
+{{ define "main" }}
+
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{ with .Description }}<p class="page-desc">{{ . }}</p>{{ end }}
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    {{ if eq .Section "blog" }}
+    <div class="card-grid blog-list">
+      {{ range .Pages }}
+      <article class="card">
+        <div class="card-body">
+          <div class="card-meta">
+            {{ with .Params.categories }}
+              {{ range first 1 . }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ end }}
+            <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+              {{ .Date.Format "Jan 2, 2006" }}
+            </time>
+          </div>
+          <h2 class="card-title">
+            <a href="{{ .Permalink }}" style="color:inherit;">{{ .Title }}</a>
+          </h2>
+          <p class="card-desc">{{ .Description | default (.Summary | plainify | truncate 160) }}</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-author">{{ .Params.author | default "Editorial" }}</span>
+          <a href="{{ .Permalink }}" class="read-more">Read more →</a>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+
+    {{ else if eq .Section "news" }}
+    <div class="card-grid">
+      {{ range .Pages }}
+      <a href="{{ if .Params.sourceUrl }}{{ .Params.sourceUrl }}{{ else }}{{ .Permalink }}{{ end }}"
+         {{ if .Params.sourceUrl }}target="_blank" rel="noopener noreferrer"{{ end }}
+         class="news-card" style="text-decoration:none;">
+        <div class="news-card-meta">
+          {{ with .Params.source }}<span class="news-source">{{ . }}</span>{{ end }}
+          <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "Jan 2, 2006" }}
+          </time>
+        </div>
+        <div class="news-card-title">{{ .Title }}</div>
+        {{ with .Description }}<p class="news-card-desc">{{ . }}</p>{{ end }}
+      </a>
+      {{ end }}
+    </div>
+
+    {{ else if eq .Section "videos" }}
+    <div class="card-grid">
+      {{ range .Pages }}
+      {{ $id := .Params.videoId }}
+      {{ $platform := .Params.videoPlatform | default "youtube" }}
+      <article class="video-card">
+        <a href="{{ .Permalink }}">
+          <div class="video-thumb">
+            {{ if eq $platform "youtube" }}
+            <img src="https://img.youtube.com/vi/{{ $id }}/hqdefault.jpg"
+                 alt="{{ .Title }}" loading="lazy">
+            {{ else }}
+            <div style="background:var(--border);width:100%;height:100%;aspect-ratio:16/9;"></div>
+            {{ end }}
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            {{ with .Params.duration }}
+            <span class="video-duration">{{ . }}</span>
+            {{ end }}
+          </div>
+          <div class="video-body">
+            <div class="card-meta" style="margin-bottom:0.5rem;">
+              <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+                {{ .Date.Format "Jan 2, 2006" }}
+              </time>
+            </div>
+            <div class="video-title">{{ .Title }}</div>
+            {{ with .Description }}<p class="video-desc">{{ . }}</p>{{ end }}
+          </div>
+        </a>
+      </article>
+      {{ end }}
+    </div>
+
+    {{ else }}
+    <div class="card-grid">
+      {{ range .Pages }}
+      <article class="card">
+        <div class="card-body">
+          <div class="card-meta">
+            <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+              {{ .Date.Format "Jan 2, 2006" }}
+            </time>
+          </div>
+          <h2 class="card-title">
+            <a href="{{ .Permalink }}" style="color:inherit;">{{ .Title }}</a>
+          </h2>
+          <p class="card-desc">{{ .Description | default (.Summary | plainify | truncate 160) }}</p>
+        </div>
+        <div class="card-footer">
+          <a href="{{ .Permalink }}" class="read-more">Read more →</a>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+    {{ end }}
+
+    {{ if not .Pages }}
+    <p style="color:var(--text-muted);text-align:center;padding:3rem 0;">No content yet. Check back soon.</p>
+    {{ end }}
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,134 @@
+{{ define "main" }}
+
+<!-- ── Hero ────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <span class="hero-eyebrow">Notes and essays</span>
+    <h1>Being <em>human</em> in the agentic age</h1>
+    <p class="hero-desc">{{ .Site.Params.description }}</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ "/blog/" | relURL }}" class="btn btn-primary">Read the Blog</a>
+      <a href="{{ "/about/" | relURL }}" class="btn btn-ghost">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Blog Posts ──────────────────────────────── -->
+{{ $blogPosts := where (where .Site.RegularPages "Section" "blog") "Params.featured" true }}
+{{ if not $blogPosts }}
+  {{ $blogPosts = first 3 (where .Site.RegularPages "Section" "blog") }}
+{{ end }}
+
+{{ if $blogPosts }}
+<section class="section" style="background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Articles</h2>
+      <a href="{{ "/blog/" | relURL }}" class="section-link">All articles →</a>
+    </div>
+    <div class="card-grid">
+      {{ range $blogPosts }}
+      <article class="card">
+        <div class="card-body">
+          <div class="card-meta">
+            {{ with .Params.categories }}
+              {{ range first 1 . }}<span class="tag">{{ . }}</span>{{ end }}
+            {{ end }}
+            <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+              {{ .Date.Format "Jan 2, 2006" }}
+            </time>
+          </div>
+          <h3 class="card-title">
+            <a href="{{ .Permalink }}" style="color:inherit;">{{ .Title }}</a>
+          </h3>
+          <p class="card-desc">{{ .Description | default (.Summary | plainify | truncate 160) }}</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-author">{{ .Params.author | default "Editorial" }}</span>
+          <a href="{{ .Permalink }}" class="read-more">Read more →</a>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<!-- ── Latest News ──────────────────────────────────────── -->
+{{ $news := first 4 (where .Site.RegularPages "Section" "news") }}
+{{ if $news }}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Latest News</h2>
+      <a href="{{ "/news/" | relURL }}" class="section-link">All news →</a>
+    </div>
+    <div class="card-grid">
+      {{ range $news }}
+      <a href="{{ if .Params.sourceUrl }}{{ .Params.sourceUrl }}{{ else }}{{ .Permalink }}{{ end }}"
+         {{ if .Params.sourceUrl }}target="_blank" rel="noopener noreferrer"{{ end }}
+         class="news-card" style="text-decoration:none;">
+        <div class="news-card-meta">
+          {{ with .Params.source }}<span class="news-source">{{ . }}</span>{{ end }}
+          <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "Jan 2, 2006" }}
+          </time>
+        </div>
+        <div class="news-card-title">{{ .Title }}</div>
+        {{ with .Description }}<p class="news-card-desc">{{ . }}</p>{{ end }}
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<!-- ── Videos ──────────────────────────────────────────── -->
+{{ $videos := first 3 (where .Site.RegularPages "Section" "videos") }}
+{{ if $videos }}
+<section class="section" style="background:linear-gradient(180deg,var(--bg) 0%,var(--surface) 100%);">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Watch</h2>
+      <a href="{{ "/videos/" | relURL }}" class="section-link">All videos →</a>
+    </div>
+    <div class="card-grid">
+      {{ range $videos }}
+      {{ $id := .Params.videoId }}
+      {{ $platform := .Params.videoPlatform | default "youtube" }}
+      <article class="video-card">
+        <a href="{{ .Permalink }}">
+          <div class="video-thumb">
+            {{ if eq $platform "youtube" }}
+            <img src="https://img.youtube.com/vi/{{ $id }}/hqdefault.jpg"
+                 alt="{{ .Title }}" loading="lazy">
+            {{ else }}
+            <div style="background:var(--border);width:100%;height:100%;"></div>
+            {{ end }}
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            {{ with .Params.duration }}
+            <span class="video-duration">{{ . }}</span>
+            {{ end }}
+          </div>
+          <div class="video-body">
+            <div class="card-meta" style="margin-bottom:0.5rem;">
+              <time class="card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+                {{ .Date.Format "Jan 2, 2006" }}
+              </time>
+            </div>
+            <div class="video-title">{{ .Title }}</div>
+            {{ with .Description }}<p class="video-desc">{{ . }}</p>{{ end }}
+          </div>
+        </a>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ end }}

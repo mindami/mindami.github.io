@@ -1,0 +1,19 @@
+<header class="site-header">
+  <div class="container">
+    <a href="{{ "/" | relURL }}" class="site-logo">
+      MindAm<span>I</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <ul class="site-nav">
+        {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL | relURL }}"
+             {{ if ($.IsMenuCurrent "main" .) }}class="active"{{ end }}>
+            {{ .Name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    </nav>
+  </div>
+</header>
