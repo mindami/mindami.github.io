@@ -158,6 +158,44 @@ run_build_commands() {
   )
 }
 
+inject_systemjs_runtime_if_needed() {
+  local app_dir="$1"
+  local entry_html="${app_dir}/index.html"
+  local systemjs_cdn="https://cdn.jsdelivr.net/npm/systemjs@6/dist/system.min.js"
+
+  if [[ ! -f "$entry_html" ]]; then
+    return
+  fi
+
+  if ! grep -R -q "System\.register" --include='*.js' "$app_dir"; then
+    return
+  fi
+
+  if grep -q "system\.min\.js\|systemjs" "$entry_html"; then
+    return
+  fi
+
+  echo "[external-apps] Compatibility: injecting SystemJS runtime into ${entry_html}"
+
+  awk -v runtime="<script src=\"${systemjs_cdn}\"></script>" '
+    BEGIN { inserted = 0 }
+    {
+      if (!inserted && $0 ~ /<script[^>]*src=/) {
+        print runtime
+        inserted = 1
+      }
+      print
+    }
+    END {
+      if (!inserted) {
+        print runtime
+      }
+    }
+  ' "$entry_html" > "${entry_html}.tmp"
+
+  mv "${entry_html}.tmp" "$entry_html"
+}
+
 line_number=0
 while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
   line_number=$((line_number + 1))
@@ -204,6 +242,8 @@ while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
   rm -rf "$target_dir"
   mkdir -p "$target_dir"
   cp -a "${source_dir}/." "$target_dir/"
+
+  inject_systemjs_runtime_if_needed "$target_dir"
 
   echo "[external-apps] Done: ${slug} => ${target_dir}"
 done < "$CONFIG_FILE"
